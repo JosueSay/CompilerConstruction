@@ -43,14 +43,15 @@ También puedes probar con otros archivos:
 
 Al ejecutar `antlr4 -Dlanguage=Python3 MiniLang.g4`, se generan:
 
-| Archivo                | Función                                                                   |
-| ---------------------- | ------------------------------------------------------------------------- |
-| `MiniLangLexer.py`     | Analizador léxico (tokens)                                                |
-| `MiniLangParser.py`    | Analizador sintáctico (reglas de la gramática)                            |
-| `MiniLangListener.py`  | Clase base vacía para escuchar eventos del parser                         |
-| `MiniLang.tokens`      | Tabla de tokens con sus valores numéricos                                 |
-| `MiniLangLexer.tokens` | Similar, pero solo para el lexer                                          |
-| `.interp`              | Archivos usados por `grun` (puedes ignorarlos si no usas esa herramienta) |
+| Archivo                | Descripción                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------- |
+| `MiniLangLexer.py`     | Código del **analizador léxico** generado, encargado de reconocer tokens.    |
+| `MiniLangParser.py`    | Código del **analizador sintáctico**, que aplica las reglas de la gramática. |
+| `MiniLangListener.py`  | Clase base con métodos vacíos que se ejecutan al **entrar/salir de reglas**. |
+| `MiniLang.tokens`      | Mapeo numérico de todos los **tokens definidos en la gramática**.            |
+| `MiniLangLexer.tokens` | Similar al anterior, pero generado desde la sección de **tokens del lexer**. |
+| `MiniLang.interp`      | Archivo auxiliar usado por `grun` para **pruebas interactivas** (opcional).  |
+| `MiniLangLexer.interp` | Archivo auxiliar para `grun`, correspondiente al lexer (también opcional).   |
 
 ## ✅ Validación
 
