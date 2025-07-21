@@ -2,8 +2,8 @@
 
 ## Enlaces de videos a YouTube
 
-- [Ejecución de pruebas](https://youtu.be/AbZ06BqE4Mg)
-- [Análisis ANTLR + ejecución de pruebas](https://youtu.be/v4-KbrPg6Bs)
+- [Ejecución de pruebas]()
+- [Análisis ANTLR + ejecución de pruebas]()
 
 ## Gramática SimpleLang
 
@@ -43,10 +43,6 @@ La parte sintáctica define cómo se estructura un programa válido en este leng
   - Expresiones agrupadas con paréntesis: `('(' expr ')')`, etiquetado como `#Parens`.
 
 Cada producción está etiquetada con `#Nombre`, lo cual permite que ANTLR genere nodos diferenciados en el árbol de sintaxis abstracta. Esto facilita el uso de visitantes (`Visitor`) o escuchas (`Listener`) para implementar validaciones semánticas, como verificación de tipos. Por ejemplo, la expresión `expr: expr op=('+'|'-') expr #AddSub` permite identificar fácilmente operaciones de suma y resta para validarlas posteriormente.
-
-Claro, aquí tienes la **documentación de los archivos generados por ANTLR** en el **Laboratorio 2**, basada en el nuevo contenido:
-
----
 
 ## Archivos generados por ANTLR
 
