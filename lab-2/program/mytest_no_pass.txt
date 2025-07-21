@@ -1,0 +1,5 @@
+5 % 2.0
+!"string"
+false % true
+5 + "hola"
+!9.0

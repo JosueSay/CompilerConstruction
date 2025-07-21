@@ -22,6 +22,23 @@ class TypeCheckVisitor(SimpleLangVisitor):
     else:
         raise TypeError("Unsupported operand types for + or -: {} and {}".format(left_type, right_type))
   
+  def visitMod(self, ctx: SimpleLangParser.ModContext):
+    left_type = self.visit(ctx.expr(0))
+    right_type = self.visit(ctx.expr(1))
+
+    if isinstance(left_type, IntType) and isinstance(right_type, IntType):
+        return IntType()
+    else:
+        raise TypeError("Unsupported operand types for %: {} and {}".format(left_type, right_type))
+
+  def visitNot(self, ctx: SimpleLangParser.NotContext):
+    operand_type = self.visit(ctx.expr())
+
+    if isinstance(operand_type, BoolType):
+        return BoolType()
+    else:
+        raise TypeError("Unsupported operand type for !: {}".format(operand_type))
+  
   def visitInt(self, ctx: SimpleLangParser.IntContext):
     return IntType()
 
