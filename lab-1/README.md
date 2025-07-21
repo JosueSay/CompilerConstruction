@@ -1,60 +1,82 @@
-# Lab 1 — Introducción a ANTLR 🧪
+# Lab 2 — Sistema de Tipos con ANTLR
 
-Este laboratorio tiene como objetivo familiarizarse con **ANTLR** y ejecutar un analizador léxico-sintáctico básico en Python, usando una gramática proporcionada.
+Este laboratorio se enfoca en extender un lenguaje simple usando **ANTLR** y aplicar **verificación de tipos** mediante las técnicas de **Visitor** y **Listener**. Se busca detectar errores semánticos, como incompatibilidades de tipos en operaciones, y experimentar con extensiones al sistema de tipos.
 
 ## ⚙️ Preparación del Entorno
 
-Desde el directorio `lab-1/program/` puedes automatizar la configuración y ejecución con scripts.
-
-### 1. Ejecutar el script de preparación
+Desde el directorio `lab-2/program/` puedes configurar el entorno de manera automática con:
 
 ```bash
-cd lab-1/program/
+cd lab-2/program/
 ./setup.sh
 ```
 
 Este script:
 
-* Crea y activa un entorno virtual (`venv/`)
-* Instala las dependencias necesarias
+* Crea un entorno virtual (`venv/`)
+* Instala las dependencias requeridas (como `antlr4-python3-runtime`)
 * Deja todo listo para ejecutar pruebas
 
 ## 🚀 Ejecución del Analizador
 
-Una vez configurado el entorno, puedes correr el analizador con:
+Una vez preparado el entorno, puedes ejecutar el analizador con:
 
 ```bash
 ./run.sh
 ```
 
-Esto:
+Por defecto, este script:
 
 * Activa el entorno virtual
-* Genera el lexer y parser desde `MiniLang.g4`
-* Ejecuta `Driver.py` con el archivo de entrada por defecto (`program_test.txt`)
+* Genera el lexer y parser desde `SimpleLang.g4`
+* Ejecuta `Driver.py` con el archivo `program_test_pass.txt`
 
-También puedes probar con otros archivos:
+También puedes especificar un archivo de entrada diferente:
 
 ```bash
-./run.sh archivo_personal.txt
+./run.sh program_test_no_pass.txt
 ```
 
 ## 📁 Archivos generados por ANTLR
 
-Al ejecutar `antlr4 -Dlanguage=Python3 MiniLang.g4`, se generan:
+Al ejecutar ANTLR sobre `SimpleLang.g4`, se generan los siguientes archivos:
 
-| Archivo                | Descripción                                                                  |
-| ---------------------- | ---------------------------------------------------------------------------- |
-| `MiniLangLexer.py`     | Código del **analizador léxico** generado, encargado de reconocer tokens.    |
-| `MiniLangParser.py`    | Código del **analizador sintáctico**, que aplica las reglas de la gramática. |
-| `MiniLangListener.py`  | Clase base con métodos vacíos que se ejecutan al **entrar/salir de reglas**. |
-| `MiniLang.tokens`      | Mapeo numérico de todos los **tokens definidos en la gramática**.            |
-| `MiniLangLexer.tokens` | Similar al anterior, pero generado desde la sección de **tokens del lexer**. |
-| `MiniLang.interp`      | Archivo auxiliar usado por `grun` para **pruebas interactivas** (opcional).  |
-| `MiniLangLexer.interp` | Archivo auxiliar para `grun`, correspondiente al lexer (también opcional).   |
+| Archivo                  | Descripción                                                          |
+| ------------------------ | -------------------------------------------------------------------- |
+| `SimpleLangLexer.py`     | Código del **lexer** generado automáticamente                        |
+| `SimpleLangParser.py`    | Código del **parser** generado a partir de las reglas gramaticales   |
+| `SimpleLangVisitor.py`   | Clase base con métodos `visitX` para usar el patrón Visitor          |
+| `SimpleLangListener.py`  | Clase base con métodos `enterX`/`exitX` para usar el patrón Listener |
+| `SimpleLang.tokens`      | Tabla de tokens léxicos generados                                    |
+| `SimpleLangLexer.tokens` | Tokens del lexer, usados internamente                                |
+| `SimpleLang.interp`      | Archivo auxiliar para `grun` (opcional)                              |
+| `SimpleLangLexer.interp` | Archivo auxiliar para el lexer (opcional)                            |
 
-## ✅ Validación
+## 🧠 Validación Semántica
 
-* ✅ Si la entrada es **válida**, no se mostrará ningún mensaje.
-* ❌ Si hay errores, ANTLR los mostrará en la consola.
-* Puedes modificar `program_test.txt` o pasar otros archivos al `run.sh`.
+El sistema implementa reglas de tipo para detectar errores como:
+
+* Operar `int` con `string` → ❌
+* Negar un `float` → ❌
+* Módulo entre `int` y `float` → ❌
+
+La salida te indicará si el tipo es correcto:
+
+```bash
+Type checking passed
+```
+
+O te mostrará errores detallados por línea:
+
+```bash
+Type checking error: Unsupported operand types for + or -: float and bool
+```
+
+## ✅ Archivos de prueba
+
+Se incluyen:
+
+* `program_test_pass.txt` → contiene expresiones con tipos válidos
+* `program_test_no_pass.txt` → contiene errores intencionales para probar el verificador
+
+Puedes editar o crear tus propios archivos para probar nuevas combinaciones.
