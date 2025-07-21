@@ -5,6 +5,59 @@
 - [Ejecución de pruebas](https://youtu.be/eVzvp7zd0Tw)
 - [Análisis ANTLR + ejecución de pruebas](https://youtu.be/Y2eTm6EFqdQ)
 
+## Cambios en código
+
+### Gramática
+
+Se agregaron dos reglas para operación mod y negación de booleanos:
+
+```bash
+...
+| expr '%' expr     # Mod
+| '!' expr          # Not
+...
+```
+
+### Visitor y Listener
+
+Se agregaron validaciones para visitor en `type_check_visitor`:
+
+```python
+def visitMod(self, ctx: SimpleLangParser.ModContext):
+   left_type = self.visit(ctx.expr(0))
+   right_type = self.visit(ctx.expr(1))
+
+   if isinstance(left_type, IntType) and isinstance(right_type, IntType):
+      return IntType()
+   else:
+      raise TypeError("Unsupported operand types for %: {} and {}".format(left_type, right_type))
+
+def visitNot(self, ctx: SimpleLangParser.NotContext):
+   operand_type = self.visit(ctx.expr())
+
+   if isinstance(operand_type, BoolType):
+      return BoolType()
+   else:
+      raise TypeError("Unsupported operand type for !: {}".format(operand_type))
+```
+
+Se agregaron validaciones para visitor en `type_check_listener`:
+
+```python
+def exitMod(self, ctx: SimpleLangParser.ModContext):
+   left_type = self.types[ctx.expr(0)]
+   right_type = self.types[ctx.expr(1)]
+   if not isinstance(left_type, IntType) or not isinstance(right_type, IntType):
+   self.errors.append(f"Unsupported operand types for %: {left_type} and {right_type}")
+   self.types[ctx] = IntType()
+
+def exitNot(self, ctx: SimpleLangParser.NotContext):
+   operand_type = self.types[ctx.expr()]
+   if not isinstance(operand_type, BoolType):
+   self.errors.append(f"Unsupported operand type for !: {operand_type}")
+   self.types[ctx] = BoolType()
+```
+
 ## Gramática SimpleLang
 
 La gramática utilizada en este laboratorio se denomina `SimpleLang` y está definida en el archivo `SimpleLang.g4`. Esta gramática especifica las reglas sintácticas y léxicas de un lenguaje simple que permite trabajar con operaciones aritméticas y distintos tipos de datos.
