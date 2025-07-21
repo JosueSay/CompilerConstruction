@@ -2,8 +2,8 @@
 
 ## Enlaces de videos a YouTube
 
-- [Ejecución de pruebas]()
-- [Análisis ANTLR + ejecución de pruebas]()
+- [Ejecución de pruebas](https://youtu.be/eVzvp7zd0Tw)
+- [Análisis ANTLR + ejecución de pruebas](https://youtu.be/Y2eTm6EFqdQ)
 
 ## Gramática SimpleLang
 
