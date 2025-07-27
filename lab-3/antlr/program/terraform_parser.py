@@ -1,3 +1,5 @@
+import json
+import os
 import sys
 import time
 import requests
@@ -5,6 +7,8 @@ from antlr4 import *
 from TerraformSubsetLexer import TerraformSubsetLexer
 from TerraformSubsetParser import TerraformSubsetParser
 from TerraformSubsetListener import TerraformSubsetListener
+
+STATE_FILE = "terraform.tfstate"
 
 class TerraformApplyListener(TerraformSubsetListener):
   def __init__(self):
@@ -89,10 +93,54 @@ def create_droplet(api_token, config):
     networks = droplet_info["networks"]["v4"]
     public_ips = [n["ip_address"] for n in networks if n["type"] == "public"]
     if public_ips:
-      return public_ips[0]
+      return public_ips[0], droplet_id
     time.sleep(5)
 
+def saveState(name, droplet_id, ip):
+  state = {
+    "name": name,
+    "id": droplet_id,
+    "ip": ip
+  }
+  with open(STATE_FILE, "w") as f:
+    json.dump(state, f, indent=2)
+  print(f"[SAVE] State saved to {STATE_FILE}")
+
+def destroyDroplet(api_token):
+  if not os.path.exists(STATE_FILE):
+    print(f"[!] No state file found at {STATE_FILE}")
+    return
+
+  with open(STATE_FILE) as f:
+    state = json.load(f)
+
+  droplet_id = state.get("id")
+  if not droplet_id:
+    print("[!] No droplet ID found in state.")
+    return
+
+  url = f"https://api.digitalocean.com/v2/droplets/{droplet_id}"
+  headers = {
+    "Authorization": f"Bearer {api_token}"
+  }
+
+  print(f"[*] Deleting droplet ID: {droplet_id}")
+  response = requests.delete(url, headers=headers)
+
+  if response.status_code == 204:
+    print("[✓] Droplet successfully destroyed.")
+    os.remove(STATE_FILE)
+  elif response.status_code == 404:
+    print("[!] Droplet not found. Maybe it was already deleted.")
+  else:
+    print(f"[!] Unexpected error: {response.status_code} {response.text}")
+
 def main(argv):
+  if len(argv) < 3:
+    print("Uso: python terraform_parser.py <archivo.tf> <--apply|--destroy>")
+    return
+
+  mode = argv[2]
   input_stream = FileStream(argv[1])
   lexer = TerraformSubsetLexer(input_stream)
   stream = CommonTokenStream(lexer)
@@ -104,11 +152,19 @@ def main(argv):
   walker.walk(listener, tree)
 
   token = listener.resolve_token()
-  if not listener.droplet_config:
-    raise Exception("Missing digitalocean_droplet resource.")
 
-  ip = create_droplet(token, listener.droplet_config)
-  print(f"[✓] Droplet available at IP: {ip}")
+  if mode == "--apply":
+    if not listener.droplet_config:
+      raise Exception("Missing digitalocean_droplet resource.")
+    ip, droplet_id = create_droplet(token, listener.droplet_config)
+    saveState(listener.droplet_config["name"], droplet_id, ip)
+
+
+  elif mode == "--destroy":
+    destroyDroplet(token)
+
+  else:
+    print("Modo no reconocido. Usa --apply o --destroy.")
 
 if __name__ == "__main__":
   main(sys.argv)
