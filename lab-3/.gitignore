@@ -1,0 +1,5 @@
+bash/droplet_id.txt
+terraform/terraform.tfvars
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/*.tfstate
