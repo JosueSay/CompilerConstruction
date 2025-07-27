@@ -1,4 +1,4 @@
----
+<!-- ---
 header-includes:
   - \usepackage{amsmath}
   - \usepackage{amssymb}
@@ -11,7 +11,7 @@ header-includes:
   - \DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}}
   - \hypersetup{colorlinks=true, linkcolor=blue, urlcolor=blue}
 geometry: top=0.67in, bottom=0.67in, left=0.85in, right=0.85in
----
+--- -->
 
 # Laboratorio 3 - Droplet en DigitalOcean con Terraform
 
@@ -38,7 +38,7 @@ Se creó y destruyó un Droplet en DigitalOcean manualmente usando Bash + Docker
 
 **Respuesta de la ejecución de los comandos:**
 
-![Ejecución de comandos docker](../images/c_guia1.png){height=250px}
+![Ejecución de comandos docker](../images/c_guia1.png)
 
 ## Guia 2 (Construcción de compiladores laboraotrio guiado no 4 terraform)
 
@@ -76,11 +76,11 @@ Para ejecutarlo, utiliza:
 
 Esto ejecutará todo el proceso solicitado.
 
-![Primera ejecución del archivo principal](../images/c_guia_main_s2.png){height=250px}
+![Primera ejecución del archivo principal](../images/c_guia_main_s2.png)
 
 Al hacer un `ping` y ejecutar el destroy al `droplet` dado el nuevo id:
 
-![Segunda ejecución del archivo principal](../images/c_guia_main_s3.png){height=250px}
+![Segunda ejecución del archivo principal](../images/c_guia_main_s3.png)
 
 ### ¿Qué se implementó?
 
