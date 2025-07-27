@@ -1,3 +1,6 @@
 configs
 program/__pycache__
 /program/main.tf
+/program/TerraformSubsetLexer.py
+/program/TerraformSubsetListener.py
+/program/TerraformSubsetParser.py
